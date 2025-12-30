@@ -1,0 +1,41 @@
+id,name,image,bossName,description,healthPoints,physicalResist,magicResist,fireResist,lightningResist,holyResist,bleedImmune,poisonImmune,frostImmune,scarletRotImmune,madnessImmune,sleepImmune,weakness,tier,averageDamage
+boss-stat-001,Margit Stats,,Margit the Fell Omen,Combat stats for Margit the Fell Omen,4174,15,25,20,20,30,false,false,false,true,true,true,Slash Bleed,1,120
+boss-stat-002,Godrick Stats,,Godrick The Grafted,Combat stats for Godrick,6080,20,30,25,25,30,false,false,false,false,true,false,Slash Bleed,2,150
+boss-stat-003,Radahn Stats,,Starscourge Radahn,Combat stats for Radahn,25856,30,35,30,30,35,false,false,false,true,true,false,Scarlet Rot,4,350
+boss-stat-004,Malenia Stats,,Malenia Blade Of Miquella,Combat stats for Malenia,33251,25,40,30,30,40,true,true,false,true,true,false,Fire Frost,5,400
+boss-stat-005,Fire Giant Stats,,Fire Giant,Combat stats for Fire Giant,42363,35,30,50,30,30,true,true,true,true,true,true,Strike,5,380
+boss-stat-006,Elden Beast Stats,,Elden Beast,Combat stats for Elden Beast,26880,40,10,40,20,0,true,true,true,true,true,true,Holy Pierce,5,420
+boss-stat-007,Godfrey Stats,,Godfrey First Elden Lord,Combat stats for Godfrey,21903,30,30,30,30,30,false,false,false,false,true,false,Bleed,5,360
+boss-stat-008,Mohg Stats,,Mohg Lord Of Blood,Combat stats for Mohg,38848,25,35,10,30,35,true,false,false,true,true,false,Physical Bleed,5,340
+boss-stat-009,Rykard Stats,,Rykard Lord Of Blasphemy,Combat stats for Rykard,89613,40,35,0,35,35,true,true,true,true,true,true,Serpent-Hunter,5,300
+boss-stat-010,Placidusax Stats,,Dragonlord Placidusax,Combat stats for Placidusax,26651,30,25,20,0,30,false,false,false,false,true,false,Lightning Pierce,5,380
+boss-stat-011,Maliketh Stats,,Maliketh The Black Blade,Combat stats for Maliketh,10620,25,30,25,30,10,false,false,false,false,true,false,Holy Fire,5,400
+boss-stat-012,Agheel Stats,,Flying Dragon Agheel,Combat stats for Agheel,3200,20,25,0,40,25,false,false,false,false,false,false,Pierce,1,100
+boss-stat-013,Margit Godfrey Stats,,Godfrey Golden Shade,Combat stats for Golden Godfrey,7099,25,25,25,25,25,false,false,false,false,true,false,Bleed,3,200
+boss-stat-014,Draconic Sentinel Stats,,Draconic Tree Sentinel,Combat stats for Tree Sentinel,8398,30,25,20,0,25,false,false,false,false,true,false,Lightning Strike,3,220
+boss-stat-015,Red Wolf Stats,,Red Wolf Of Radagon,Combat stats for Red Wolf,2204,15,0,20,20,20,false,false,false,false,false,false,Magic Strike,2,140
+boss-stat-016,Rennala Stats,,Rennala Queen Of The Full Moon,Combat stats for Rennala,4481,20,0,25,25,25,false,false,false,false,false,false,Physical Strike,2,160
+boss-stat-017,Astel Stats,,Astel Stars Of Darkness,Combat stats for Astel,25376,25,0,30,30,30,false,false,false,false,false,false,Physical Fire,4,320
+boss-stat-018,Fortissax Stats,,Lichdragon Fortissax,Combat stats for Fortissax,13955,25,30,25,0,30,false,false,false,true,true,false,Lightning,4,280
+boss-stat-019,Ancestor Spirit Stats,,Ancestor Spirit,Combat stats for Ancestor Spirit,2200,20,25,25,25,20,false,false,false,false,false,false,Fire,1,90
+boss-stat-020,Regal Ancestor Stats,,Regal Ancestor Spirit,Combat stats for Regal Ancestor,6301,22,28,28,28,22,false,false,false,false,false,false,Fire,3,180
+boss-stat-021,Loretta Stats,,Royal Knight Loretta,Combat stats for Loretta,4214,20,10,25,25,30,false,false,false,false,false,false,Magic Strike,2,150
+boss-stat-022,Alecto Stats,,Alecto Black Knife Ringleader,Combat stats for Alecto,2200,15,20,20,20,10,false,false,false,false,false,false,Holy Fire,2,200
+boss-stat-023,Godskin Duo Stats,,Godskin Duo,Combat stats for Godskin Duo,24000,25,30,0,30,30,false,false,false,false,true,false,Bleed Sleep,5,340
+boss-stat-024,Godskin Apostle Stats,,Godskin Apostle,Combat stats for Godskin Apostle,10000,22,28,0,28,28,false,false,false,false,true,false,Slash Bleed,3,240
+boss-stat-025,Godskin Noble Stats,,Godskin Noble,Combat stats for Godskin Noble,10000,22,28,0,28,28,false,false,false,false,true,false,Pierce Bleed,3,240
+boss-stat-026,Commander Niall Stats,,Commander Niall,Combat stats for Commander Niall,16000,28,25,25,0,25,false,false,true,false,true,false,Lightning,4,280
+boss-stat-027,Ekzykes Stats,,Decaying Ekzykes,Combat stats for Ekzykes,23731,25,30,15,35,30,false,false,false,true,false,false,Physical,4,260
+boss-stat-028,Borealis Stats,,Borealis The Freezing Fog,Combat stats for Borealis,11100,25,30,30,30,30,false,false,true,false,false,false,Fire Strike,3,240
+boss-stat-029,Lansseax Stats,,Ancient Dragon Lansseax,Combat stats for Lansseax,9087,25,28,25,0,28,false,false,false,false,true,false,Lightning,3,220
+boss-stat-030,Black Blade Kindred Stats,,Black Blade Kindred,Combat stats for Black Blade Kindred,12500,35,30,30,30,25,false,false,false,false,true,false,Strike Fire,3,260
+boss-stat-031,Valiant Gargoyle Stats,,Valiant Gargoyle,Combat stats for Valiant Gargoyle,9120,30,25,25,25,20,false,false,false,false,true,false,Strike,3,220
+boss-stat-032,Fallingstar Beast Stats,,Fallingstar Beast,Combat stats for Fallingstar Beast,8000,30,0,25,25,25,false,false,false,false,false,false,Magic Strike,3,200
+boss-stat-033,Magma Wyrm Stats,,Magma Wyrm,Combat stats for Magma Wyrm,7000,25,28,0,28,28,false,false,false,false,false,false,Pierce,2,180
+boss-stat-034,Crucible Knight Stats,,Crucible Knight,Combat stats for Crucible Knight,2750,25,28,28,28,28,false,false,false,false,true,false,Strike Bleed,2,160
+boss-stat-035,Bell Bearing Hunter Stats,,Bell Bearing Hunter,Combat stats for Bell Bearing Hunter,6000,20,25,25,25,25,false,false,false,false,false,false,Strike Bleed,2,180
+boss-stat-036,Mimic Tear Stats,,Mimic Tear,Combat stats for Mimic Tear,19536,0,0,0,0,0,false,false,false,false,false,false,None,3,200
+boss-stat-037,Darriwil Stats,,Bloodhound Knight Darriwil,Combat stats for Darriwil,14792,20,25,25,25,25,false,false,false,false,false,false,Strike,1,110
+boss-stat-038,Leonine Misbegotten Stats,,Leonine Misbegotten,Combat stats for Leonine Misbegotten,14272,18,22,22,22,22,false,false,false,false,false,false,Fire,1,120
+boss-stat-039,Deathbird Stats,,Deathbird,Combat stats for Deathbird,2750,20,25,25,25,10,false,false,false,false,false,false,Holy,1,100
+boss-stat-040,Erdtree Avatar Stats,,Erdtree Avatar,Combat stats for Erdtree Avatar,14992,25,28,0,28,28,false,false,false,false,true,false,Fire Slash,3,220
