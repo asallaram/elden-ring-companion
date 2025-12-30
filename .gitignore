@@ -1,0 +1,12 @@
+node_modules/
+bin/
+obj/
+.vs/
+*.user
+*.suo
+.DS_Store
+frontend/.svelte-kit/
+frontend/build/
+frontend/node_modules/
+EldenRingSim/bin/
+EldenRingSim/obj/
