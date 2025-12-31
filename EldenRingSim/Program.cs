@@ -131,7 +131,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<EldenRingContext>();
     db.Database.EnsureCreated();
-    var basePath = "elden-ring-data";
+    var basePath = Path.Combine(AppContext.BaseDirectory, "elden-ring-data");
 
     var weaponCount = db.Weapons.Count();
     
