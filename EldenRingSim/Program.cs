@@ -82,9 +82,10 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    var configuration = ConfigurationOptions.Parse(
-        builder.Configuration.GetConnectionString("Redis")!, true);
-    return ConnectionMultiplexer.Connect(configuration);
+    var redisConfig = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis")!);
+redisConfig.Ssl = true;
+redisConfig.AbortOnConnectFail = false;
+return ConnectionMultiplexer.Connect(redisConfig);
 });
 
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
