@@ -6,11 +6,11 @@ RUN dotnet restore
 
 COPY . ./
 RUN dotnet publish -c Release -o out
+RUN cp -r elden-ring-data out/elden-ring-data
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/out .
-COPY --from=build /app/elden-ring-data ./elden-ring-data
 
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
