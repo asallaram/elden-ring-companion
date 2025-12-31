@@ -20,10 +20,15 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") 
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        policy.WithOrigins(
+    "http://localhost:5173",
+    "https://elden-ring-companion-alpha.vercel.app",
+    "https://elden-ring-companion-git-main-asallarams-projects.vercel.app",
+    "https://elden-ring-companion-5u0usdreo-asallarams-projects.vercel.app"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
