@@ -124,6 +124,7 @@ app.MapGet("/", () => "Elden Ring Simulator is running!");
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<EldenRingContext>();
+    db.Database.EnsureCreated();
     var basePath = "elden-ring-data";
 
     var weaponCount = db.Weapons.Count();
