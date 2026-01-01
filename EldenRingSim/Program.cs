@@ -77,17 +77,8 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    var options = new ConfigurationOptions
-    {
-        EndPoints = { "arriving-teal-60460.upstash.io:6379" },
-        Password = "AewsAAIncDE1NjZmODk4ODdlNjA0N2E0YWQwNjVhYTVhNjcxYTA3Y3AxNjA0NjA",
-        Ssl = true,
-        AbortOnConnectFail = false,
-        ConnectTimeout = 10000,
-        SyncTimeout = 5000,
-        ConnectRetry = 3
-    };
-    return ConnectionMultiplexer.Connect(options);
+    var config = "arriving-teal-60460.upstash.io:6379,password=AewsAAIncDE1NjZmODk4ODdlNjA0N2E0YWQwNjVhYTVhNjcxYTA3Y3AxNjA0NjA,ssl=True,abortConnect=False";
+    return ConnectionMultiplexer.Connect(config);
 });
 
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
