@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EldenRingSim")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0dba7b45faab59838053af99120a90754128eab")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+39b25b18f308dcde3a85e564a841faf3b2d1ac90")]
 [assembly: System.Reflection.AssemblyProductAttribute("EldenRingSim")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EldenRingSim")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -20,26 +20,17 @@ namespace EldenRingSim.Repositories
 
         public new async Task<List<Weapons>> GetAllAsync()
         {
-            var cacheKey = "weapons:all";
-            
-            var cached = await _cache.GetAsync<List<Weapons>>(cacheKey);
-            if (cached != null)
-            {
-                _logger.LogDebug("⚡ Cache HIT: {Count} weapons", cached.Count);
-                return cached;
-            }
-
-            _logger.LogDebug("💾 Cache MISS: Loading all weapons from database");
+            _logger.LogDebug("Loading all weapons from database (no cache)");
             
             var weapons = await _dbSet
                 .Include(w => w.Attack)
                 .Include(w => w.Defence)
                 .Include(w => w.ScalesWith)
                 .Include(w => w.RequiredAttributes)
+                .AsNoTracking()
                 .ToListAsync();
 
-            await _cache.SetAsync(cacheKey, weapons, TimeSpan.FromHours(24));
-            _logger.LogDebug("✅ Cached {Count} weapons for 24 hours", weapons.Count);
+            _logger.LogDebug("Loaded {Count} weapons", weapons.Count);
 
             return weapons;
         }
