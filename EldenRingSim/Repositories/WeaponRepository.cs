@@ -18,6 +18,61 @@ namespace EldenRingSim.Repositories
             _logger = logger;
         }
 
+        public new async Task<List<Weapons>> GetAllAsync()
+        {
+            var cacheKey = "weapons:all";
+            
+            var cached = await _cache.GetAsync<List<Weapons>>(cacheKey);
+            if (cached != null)
+            {
+                _logger.LogDebug("⚡ Cache HIT: {Count} weapons", cached.Count);
+                return cached;
+            }
+
+            _logger.LogDebug("💾 Cache MISS: Loading all weapons from database");
+            
+            var weapons = await _dbSet
+                .Include(w => w.Attack)
+                .Include(w => w.Defence)
+                .Include(w => w.ScalesWith)
+                .Include(w => w.RequiredAttributes)
+                .ToListAsync();
+
+            await _cache.SetAsync(cacheKey, weapons, TimeSpan.FromHours(24));
+            _logger.LogDebug("✅ Cached {Count} weapons for 24 hours", weapons.Count);
+
+            return weapons;
+        }
+
+        public new async Task<Weapons?> GetByIdAsync(string id)
+        {
+            var cacheKey = $"weapon:id:{id.ToLower()}";
+            
+            var cached = await _cache.GetAsync<Weapons>(cacheKey);
+            if (cached != null)
+            {
+                _logger.LogDebug("⚡ Cache HIT: weapon ID '{Id}'", id);
+                return cached;
+            }
+
+            _logger.LogDebug("💾 Cache MISS: Loading weapon '{Id}' from database", id);
+            
+            var weapon = await _dbSet
+                .Include(w => w.Attack)
+                .Include(w => w.Defence)
+                .Include(w => w.ScalesWith)
+                .Include(w => w.RequiredAttributes)
+                .FirstOrDefaultAsync(w => w.Id == id);
+
+            if (weapon != null)
+            {
+                await _cache.SetAsync(cacheKey, weapon, TimeSpan.FromHours(1));
+                _logger.LogDebug("✅ Cached weapon '{Id}'", id);
+            }
+
+            return weapon;
+        }
+
         public async Task<Weapons?> GetByNameAsync(string name)
         {
             var cacheKey = $"weapon:name:{name.ToLower()}";
