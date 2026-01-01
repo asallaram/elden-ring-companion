@@ -65,23 +65,27 @@
   }
 
   onMount(() => {
-    if ($authStore.isLoading) {
-      const unsubscribe = authStore.subscribe(state => {
-        if (!state.isLoading) {
-          unsubscribe();
-          if (state.isAuthenticated) {
-            loadWeapons();
-          } else {
-            goto('/login');
-          }
+  let hasLoaded = false; // Add this
+  
+  if ($authStore.isLoading) {
+    const unsubscribe = authStore.subscribe(state => {
+      if (!state.isLoading) {
+        unsubscribe();
+        if (state.isAuthenticated && !hasLoaded) { // Add check
+          hasLoaded = true;
+          loadWeapons();
+        } else {
+          goto('/login');
         }
-      });
-    } else if ($authStore.isAuthenticated) {
-      loadWeapons();
-    } else {
-      goto('/login');
-    }
-  });
+      }
+    });
+  } else if ($authStore.isAuthenticated && !hasLoaded) { // Add check
+    hasLoaded = true;
+    loadWeapons();
+  } else {
+    goto('/login');
+  }
+});
 
   async function loadWeapons() {
     try {
