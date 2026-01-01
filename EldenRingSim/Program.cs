@@ -75,25 +75,37 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-});
+// Redis Configuration - Simplified for local development
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    var options = new ConfigurationOptions
+    try
     {
-        EndPoints = { "arriving-teal-60460.upstash.io:6379" },
-        Password = "AewsAAIncDE1NjZmODk4ODdlNjA0N2E0YWQwNjVhYTVhNjcxYTA3Y3AxNjA0NjA",
-        Ssl = true,
-        AbortOnConnectFail = false
-    };
-    return ConnectionMultiplexer.Connect(options);
+        var options = ConfigurationOptions.Parse(redisConnectionString!);
+        options.AbortOnConnectFail = false;
+        options.ConnectTimeout = 10000;
+        options.SyncTimeout = 5000;
+        options.ConnectRetry = 3;
+        
+        var multiplexer = ConnectionMultiplexer.Connect(options);
+        
+        // Log connection status
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        logger.LogInformation($"Redis connection status: {multiplexer.IsConnected}");
+        
+        return multiplexer;
+    }
+    catch (Exception ex)
+    {
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Failed to connect to Redis. Cache will be unavailable.");
+        throw;
+    }
 });
 
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 
-// ============= REPOSITORIES =============
 builder.Services.AddScoped<IWeaponRepository, WeaponRepository>();
 builder.Services.AddScoped<IBossRepository, BossRepository>();
 builder.Services.AddScoped<IBossStatsRepository, BossStatsRepository>(); 
@@ -109,7 +121,6 @@ builder.Services.AddScoped<IRepository<Locations>, Repository<Locations>>();
 builder.Services.AddScoped<IPlayerProgressRepository, PlayerProgressRepository>(); 
 builder.Services.AddScoped<IBossFightRepository, BossFightRepository>(); 
 
-// Analysis Engine
 builder.Services.AddScoped<IAnalysisEngine, AnalysisEngine>();
 
 builder.Services.AddEndpointsApiExplorer();
