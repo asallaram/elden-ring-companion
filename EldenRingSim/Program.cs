@@ -75,33 +75,19 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-// Redis Configuration - Simplified for local development
-var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    try
+    var options = new ConfigurationOptions
     {
-        var options = ConfigurationOptions.Parse(redisConnectionString!);
-        options.AbortOnConnectFail = false;
-        options.ConnectTimeout = 10000;
-        options.SyncTimeout = 5000;
-        options.ConnectRetry = 3;
-        
-        var multiplexer = ConnectionMultiplexer.Connect(options);
-        
-        // Log connection status
-        var logger = sp.GetRequiredService<ILogger<Program>>();
-        logger.LogInformation($"Redis connection status: {multiplexer.IsConnected}");
-        
-        return multiplexer;
-    }
-    catch (Exception ex)
-    {
-        var logger = sp.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Failed to connect to Redis. Cache will be unavailable.");
-        throw;
-    }
+        EndPoints = { "arriving-teal-60460.upstash.io:6379" },
+        Password = "AewsAAIncDE1NjZmODk4ODdlNjA0N2E0YWQwNjVhYTVhNjcxYTA3Y3AxNjA0NjA",
+        Ssl = true,
+        AbortOnConnectFail = false,
+        ConnectTimeout = 10000,
+        SyncTimeout = 5000,
+        ConnectRetry = 3
+    };
+    return ConnectionMultiplexer.Connect(options);
 });
 
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
