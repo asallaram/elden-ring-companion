@@ -4,6 +4,8 @@
   import { authStore } from '$lib/stores/auth';
   import { characterStore } from '$lib/stores/character';
   import { goto } from '$app/navigation';
+  let hasLoaded = false; 
+
 
   interface Attack {
     name: string;
@@ -65,13 +67,12 @@
   }
 
   onMount(() => {
-  let hasLoaded = false; // Add this
   
   if ($authStore.isLoading) {
     const unsubscribe = authStore.subscribe(state => {
       if (!state.isLoading) {
         unsubscribe();
-        if (state.isAuthenticated && !hasLoaded) { // Add check
+        if (state.isAuthenticated && !hasLoaded) { 
           hasLoaded = true;
           loadWeapons();
         } else {
@@ -79,7 +80,7 @@
         }
       }
     });
-  } else if ($authStore.isAuthenticated && !hasLoaded) { // Add check
+  } else if ($authStore.isAuthenticated && !hasLoaded) { 
     hasLoaded = true;
     loadWeapons();
   } else {
