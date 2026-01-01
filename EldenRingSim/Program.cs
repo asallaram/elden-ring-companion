@@ -79,13 +79,16 @@ builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
 });
-
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    var redisConfig = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis")!);
-redisConfig.Ssl = true;
-redisConfig.AbortOnConnectFail = false;
-return ConnectionMultiplexer.Connect(redisConfig);
+    var options = new ConfigurationOptions
+    {
+        EndPoints = { "arriving-teal-60460.upstash.io:6379" },
+        Password = "AewsAAIncDE1NjZmODk4ODdlNjA0N2E0YWQwNjVhYTVhNjcxYTA3Y3AxNjA0NjA",
+        Ssl = true,
+        AbortOnConnectFail = false
+    };
+    return ConnectionMultiplexer.Connect(options);
 });
 
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
