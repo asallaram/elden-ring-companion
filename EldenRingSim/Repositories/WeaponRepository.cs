@@ -23,7 +23,6 @@ namespace EldenRingSim.Repositories
             _logger.LogDebug("Loading all weapons from database (no cache)");
             
             var weapons = await _dbSet
-                .AsSplitQuery()
                 .Include(w => w.Attack)
                 .Include(w => w.Defence)
                 .Include(w => w.ScalesWith)
@@ -41,7 +40,6 @@ namespace EldenRingSim.Repositories
             _logger.LogDebug("Loading weapon '{Id}' from database", id);
             
             var weapon = await _dbSet
-                .AsSplitQuery()
                 .Include(w => w.Attack)
                 .Include(w => w.Defence)
                 .Include(w => w.ScalesWith)
@@ -57,7 +55,6 @@ namespace EldenRingSim.Repositories
             _logger.LogDebug("Loading weapon '{Name}' from database", name);
             
             var weapon = await _dbSet
-                .AsSplitQuery()
                 .Include(w => w.Attack)
                 .Include(w => w.Defence)
                 .Include(w => w.ScalesWith)
@@ -73,7 +70,6 @@ namespace EldenRingSim.Repositories
             _logger.LogDebug("Loading category '{Category}' from database", category);
             
             var weapons = await _dbSet
-                .AsSplitQuery()
                 .Include(w => w.Attack)
                 .Include(w => w.Defence)
                 .Include(w => w.ScalesWith)
@@ -88,7 +84,6 @@ namespace EldenRingSim.Repositories
         public async Task<IEnumerable<Weapons>> GetByWeightRangeAsync(double minWeight, double maxWeight)
         {
             return await _dbSet
-                .AsSplitQuery()
                 .Include(w => w.Attack)
                 .Include(w => w.ScalesWith)
                 .AsNoTracking()
@@ -101,7 +96,6 @@ namespace EldenRingSim.Repositories
             int strength, int dexterity, int intelligence, int faith)
         {
             var allWeapons = await _dbSet
-                .AsSplitQuery()
                 .Include(w => w.Attack)
                 .Include(w => w.ScalesWith)
                 .Include(w => w.RequiredAttributes)
