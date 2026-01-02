@@ -1,5 +1,6 @@
 using StackExchange.Redis;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace EldenRingSim.Services
 {
@@ -15,6 +16,13 @@ namespace EldenRingSim.Services
     {
         private readonly IDatabase _database;
         private readonly ILogger<RedisCacheService> _logger;
+        
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            WriteIndented = false,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
 
         public RedisCacheService(IConnectionMultiplexer redis, ILogger<RedisCacheService> logger)
         {
@@ -35,7 +43,7 @@ namespace EldenRingSim.Services
                 }
 
                 _logger.LogDebug("Cache HIT for key: {Key}", key);
-                return JsonSerializer.Deserialize<T>(value!);
+                return JsonSerializer.Deserialize<T>(value!, JsonOptions);
             }
             catch (Exception ex)
             {
@@ -48,7 +56,7 @@ namespace EldenRingSim.Services
         {
             try
             {
-                var serialized = JsonSerializer.Serialize(value);
+                var serialized = JsonSerializer.Serialize(value, JsonOptions);
                 
                 if (expiration.HasValue)
                 {

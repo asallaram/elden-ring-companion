@@ -1,4 +1,6 @@
-const API_BASE = '/api';
+const API_BASE = import.meta.env.MODE === 'production' 
+  ? 'https://elden-ring-companion.onrender.com/api'
+  : '/api';
 
 export interface ApiOptions extends RequestInit {
   queryParams?: Record<string, string | number | boolean>;
