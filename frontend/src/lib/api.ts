@@ -1,5 +1,6 @@
-const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:5019/api';
-export const authToken = {
+const API_BASE_URL = import.meta.env.MODE === 'production' 
+  ? 'https://elden-ring-companion.onrender.com/api'
+  : 'http://localhost:5019/api';export const authToken = {
   get: (): string | null => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('jwt_token');
