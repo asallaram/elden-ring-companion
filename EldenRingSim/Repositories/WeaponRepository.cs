@@ -37,85 +37,46 @@ namespace EldenRingSim.Repositories
 
         public new async Task<Weapons?> GetByIdAsync(string id)
         {
-            var cacheKey = $"weapon:id:{id.ToLower()}";
-            
-            var cached = await _cache.GetAsync<Weapons>(cacheKey);
-            if (cached != null)
-            {
-                _logger.LogDebug("⚡ Cache HIT: weapon ID '{Id}'", id);
-                return cached;
-            }
-
-            _logger.LogDebug("💾 Cache MISS: Loading weapon '{Id}' from database", id);
+            _logger.LogDebug("Loading weapon '{Id}' from database", id);
             
             var weapon = await _dbSet
                 .Include(w => w.Attack)
                 .Include(w => w.Defence)
                 .Include(w => w.ScalesWith)
                 .Include(w => w.RequiredAttributes)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(w => w.Id == id);
-
-            if (weapon != null)
-            {
-                await _cache.SetAsync(cacheKey, weapon, TimeSpan.FromHours(1));
-                _logger.LogDebug("✅ Cached weapon '{Id}'", id);
-            }
 
             return weapon;
         }
 
         public async Task<Weapons?> GetByNameAsync(string name)
         {
-            var cacheKey = $"weapon:name:{name.ToLower()}";
-            
-            var cached = await _cache.GetAsync<Weapons>(cacheKey);
-            if (cached != null)
-            {
-                _logger.LogDebug("⚡ Cache HIT: weapon '{Name}' (skipped database)", name);
-                return cached;
-            }
-
-            _logger.LogDebug("💾 Cache MISS: weapon '{Name}' (querying database)", name);
+            _logger.LogDebug("Loading weapon '{Name}' from database", name);
             
             var weapon = await _dbSet
                 .Include(w => w.Attack)
                 .Include(w => w.Defence)
                 .Include(w => w.ScalesWith)
                 .Include(w => w.RequiredAttributes)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(w => w.Name.ToLower() == name.ToLower());
-
-            if (weapon != null)
-            {
-                await _cache.SetAsync(cacheKey, weapon, TimeSpan.FromHours(1));
-                _logger.LogDebug("✅ Cached weapon '{Name}' for 1 hour", name);
-            }
 
             return weapon;
         }
 
         public async Task<IEnumerable<Weapons>> GetByCategoryAsync(string category)
         {
-            var cacheKey = $"weapons:category:{category.ToLower()}";
-            
-            var cached = await _cache.GetAsync<List<Weapons>>(cacheKey);
-            if (cached != null)
-            {
-                _logger.LogDebug("⚡ Cache HIT: {Count} weapons in category '{Category}'", cached.Count, category);
-                return cached;
-            }
-
-            _logger.LogDebug("💾 Cache MISS: Loading category '{Category}' from database", category);
+            _logger.LogDebug("Loading category '{Category}' from database", category);
             
             var weapons = await _dbSet
                 .Include(w => w.Attack)
                 .Include(w => w.Defence)
                 .Include(w => w.ScalesWith)
                 .Include(w => w.RequiredAttributes)
+                .AsNoTracking()
                 .Where(w => w.Category == category)
                 .ToListAsync();
-
-            await _cache.SetAsync(cacheKey, weapons, TimeSpan.FromHours(1));
-            _logger.LogDebug("✅ Cached {Count} weapons for category '{Category}'", weapons.Count, category);
 
             return weapons;
         }
@@ -125,6 +86,7 @@ namespace EldenRingSim.Repositories
             return await _dbSet
                 .Include(w => w.Attack)
                 .Include(w => w.ScalesWith)
+                .AsNoTracking()
                 .Where(w => w.Weight >= minWeight && w.Weight <= maxWeight)
                 .OrderBy(w => w.Weight)
                 .ToListAsync();
@@ -137,6 +99,7 @@ namespace EldenRingSim.Repositories
                 .Include(w => w.Attack)
                 .Include(w => w.ScalesWith)
                 .Include(w => w.RequiredAttributes)
+                .AsNoTracking()
                 .ToListAsync();
 
             return allWeapons.Where(weapon =>
