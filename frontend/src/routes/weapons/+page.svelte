@@ -130,24 +130,24 @@
   }
 </script>
 
-<div class="min-h-screen bg-black p-6 text-white">
+<div class="min-h-screen bg-[#0a0a0a] p-6 text-white">
   <div class="max-w-7xl mx-auto">
     <!-- Back Button -->
     <button 
       on:click={() => goto('/dashboard')} 
-      class="text-amber-400 hover:text-amber-300 mb-6 flex items-center gap-2 transition-colors"
+      class="text-amber-600 hover:text-amber-500 mb-6 flex items-center gap-2 transition-colors text-sm"
     >
       <span>←</span> Back to Dashboard
     </button>
 
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-5xl font-bold text-amber-400 mb-2">Weapons</h1>
-      <p class="text-gray-400">Browse all weapons and find your perfect armament</p>
+      <h1 class="text-4xl font-bold text-white mb-2 uppercase tracking-wide">Weapons</h1>
+      <p class="text-neutral-500 text-sm">Browse all weapons and find your perfect armament</p>
       {#if selectedCharacter}
-        <p class="text-gray-500 text-sm mt-2">
-          Playing as <span class="text-amber-400">{selectedCharacter.playerName}</span> • 
-          <span class="text-blue-400">{collectedWeaponIds.length}</span> weapons collected
+        <p class="text-neutral-600 text-xs mt-2">
+          Playing as <span class="text-amber-500">{selectedCharacter.playerName}</span> • 
+          <span class="text-blue-500">{collectedWeaponIds.length}</span> weapons collected
         </p>
       {/if}
     </div>
@@ -160,7 +160,7 @@
           type="text"
           bind:value={searchTerm}
           placeholder="Search weapons..."
-          class="w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-700 focus:border-amber-400 focus:outline-none"
+          class="w-full bg-black text-white px-4 py-3 border border-neutral-700 focus:border-amber-700 focus:outline-none"
         />
       </div>
 
@@ -168,7 +168,7 @@
       <div>
         <select
           bind:value={selectedCategory}
-          class="w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-700 focus:border-amber-400 focus:outline-none"
+          class="w-full bg-black text-white px-4 py-3 border border-neutral-700 focus:border-amber-700 focus:outline-none"
         >
           {#each categories as category}
             <option value={category}>{category}</option>
@@ -180,25 +180,25 @@
     {#if isLoading}
       <div class="flex items-center justify-center py-20">
         <div class="text-center">
-          <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-amber-400 mx-auto mb-4"></div>
-          <p class="text-amber-400 text-lg">Loading weapons...</p>
+          <div class="w-12 h-12 border-2 border-neutral-700 border-t-amber-600 mx-auto mb-4 animate-spin"></div>
+          <p class="text-neutral-400 text-sm">Loading weapons...</p>
         </div>
       </div>
     {:else if error}
-      <div class="bg-red-900/20 border border-red-500 rounded-lg p-6 text-center">
-        <p class="text-red-400 text-lg">{error}</p>
+      <div class="bg-red-950/30 border border-red-900 p-6 text-center">
+        <p class="text-red-400">{error}</p>
       </div>
     {:else}
       <!-- Results Count -->
-      <div class="mb-4 text-gray-400">
+      <div class="mb-4 text-neutral-500 text-sm">
         Showing {filteredWeapons.length} of {weapons.length} weapons
       </div>
 
       <!-- Weapons Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {#each filteredWeapons as weapon}
           <div
-            class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-amber-500 relative"
+            class="bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-amber-800 transition-colors relative"
             on:click={() => viewWeaponDetails(weapon.id)}
             on:keypress={(e) => e.key === 'Enter' && viewWeaponDetails(weapon.id)}
             role="button"
@@ -206,14 +206,14 @@
           >
             <!-- Collected Badge -->
             {#if isCollected(weapon.id)}
-              <div class="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold z-10 flex items-center gap-1 shadow-lg">
+              <div class="absolute top-2 left-2 bg-green-900 border border-green-700 text-green-300 px-2 py-1 text-xs font-bold z-10 flex items-center gap-1">
                 <span>✓</span>
                 <span>Collected</span>
               </div>
             {/if}
 
             <!-- Weapon Image -->
-            <div class="relative h-48 overflow-hidden bg-black flex items-center justify-center">
+            <div class="relative h-48 overflow-hidden bg-black border-b border-neutral-800 flex items-center justify-center">
               {#if weapon.image}
                 <img
                   src={weapon.image}
@@ -221,12 +221,12 @@
                   class="max-h-full max-w-full object-contain opacity-90 hover:opacity-100 transition-opacity p-4"
                 />
               {:else}
-                <div class="text-gray-500 text-6xl">⚔️</div>
+                <div class="text-neutral-700 text-6xl">⚔️</div>
               {/if}
               
               <!-- Category Badge -->
               {#if weapon.category}
-                <div class="absolute top-2 right-2 bg-amber-600/90 px-3 py-1 rounded-full text-xs font-bold">
+                <div class="absolute top-2 right-2 bg-amber-900 border border-amber-700 px-3 py-1 text-xs font-bold uppercase tracking-wide">
                   {weapon.category}
                 </div>
               {/if}
@@ -235,7 +235,7 @@
             <!-- Weapon Details -->
             <div class="p-4">
               <!-- Weapon Name -->
-              <h2 class="text-lg font-bold text-amber-400 mb-3 line-clamp-1">
+              <h2 class="text-base font-bold text-white mb-3 line-clamp-1 uppercase tracking-wide">
                 {weapon.name}
               </h2>
 
@@ -243,31 +243,31 @@
               <div class="space-y-2 mb-4 text-sm">
                 <!-- Damage -->
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-500">⚔️ Physical Dmg</span>
+                  <span class="text-neutral-600 text-xs">⚔️ Physical Dmg</span>
                   <span class="text-white font-bold">{getPhysicalDamage(weapon)}</span>
                 </div>
 
                 <!-- Scaling -->
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-500">📈 Best Scaling</span>
-                  <span class="text-amber-300 text-xs font-bold">{getMainScaling(weapon)}</span>
+                  <span class="text-neutral-600 text-xs">📈 Best Scaling</span>
+                  <span class="text-amber-400 text-xs font-bold">{getMainScaling(weapon)}</span>
                 </div>
 
                 <!-- Weight -->
                 <div class="flex items-center justify-between">
-                  <span class="text-gray-500">⚖️ Weight</span>
-                  <span class="text-gray-300">{weapon.weight}</span>
+                  <span class="text-neutral-600 text-xs">⚖️ Weight</span>
+                  <span class="text-neutral-400 text-xs">{weapon.weight}</span>
                 </div>
               </div>
 
               <!-- Requirements -->
-              <div class="text-xs text-gray-500 mb-3 truncate">
+              <div class="text-xs text-neutral-600 mb-3 truncate">
                 Req: {getRequirements(weapon)}
               </div>
 
               <!-- Action Button -->
               <button
-                class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-2 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 text-sm"
+                class="w-full bg-amber-900 hover:bg-amber-800 text-white font-semibold py-2 transition-colors flex items-center justify-center gap-2 text-sm"
                 on:click|stopPropagation={() => viewWeaponDetails(weapon.id)}
               >
                 <span>📊</span>
@@ -280,7 +280,7 @@
 
       {#if filteredWeapons.length === 0}
         <div class="text-center py-20">
-          <p class="text-gray-400 text-lg">No weapons found matching your filters</p>
+          <p class="text-neutral-500">No weapons found matching your filters</p>
         </div>
       {/if}
     {/if}

@@ -44,6 +44,8 @@
   let collectedWeapons: Weapon[] = [];
   let bossSearchTerm = '';
   let weaponSearchTerm = '';
+  let showDeleteModal = false;
+  let isDeleting = false;
 
   $: isActive = $characterStore?.id === character?.id;
 
@@ -193,6 +195,7 @@
     }
   }
 
+
   function setAsActive() {
     if (character) {
       characterStore.select(character);
@@ -215,64 +218,66 @@
 </svelte:head>
 
 {#if isLoading}
-  <div class="min-h-screen flex items-center justify-center bg-black">
+  <div class="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
     <div class="text-center">
-      <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-amber-400 mx-auto mb-4"></div>
-      <p class="text-amber-400 text-lg">Loading character...</p>
+      <div class="w-12 h-12 border-2 border-neutral-700 border-t-amber-600 mx-auto mb-4 animate-spin"></div>
+      <p class="text-neutral-400 text-sm">Loading character...</p>
     </div>
   </div>
 {:else if error}
-  <div class="min-h-screen flex flex-col items-center justify-center bg-black">
-    <div class="bg-red-900/20 border border-red-500 rounded-lg p-6 text-center max-w-md">
-      <p class="text-red-400 text-lg mb-4">{error}</p>
-      <button on:click={goBack} class="px-6 py-3 bg-amber-600 hover:bg-amber-700 rounded-lg text-white font-bold transition-colors">
+  <div class="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a]">
+    <div class="bg-red-950/30 border border-red-900 p-6 text-center max-w-md">
+      <p class="text-red-400 mb-4">{error}</p>
+      <button on:click={goBack} class="px-6 py-3 bg-amber-900 hover:bg-amber-800 text-white font-semibold transition-colors">
         Back to Dashboard
       </button>
     </div>
   </div>
 {:else if character}
-  <div class="min-h-screen bg-black relative overflow-hidden">
-    <!-- Background -->
-    <div class="absolute inset-0 opacity-30">
-      <div class="absolute inset-0 bg-gradient-to-br from-amber-950 via-gray-900 to-black"></div>
-      <div class="absolute top-0 right-1/4 w-96 h-96 bg-amber-600/20 rounded-full blur-3xl animate-pulse"></div>
-    </div>
-
+  <div class="min-h-screen bg-[#0a0a0a] relative">
     <!-- Content -->
-    <div class="relative max-w-7xl mx-auto p-6 z-10">
+    <div class="relative max-w-7xl mx-auto p-6">
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
         <button 
           on:click={goBack} 
-          class="text-amber-400 hover:text-amber-300 flex items-center gap-2 transition-colors"
+          class="text-amber-600 hover:text-amber-500 flex items-center gap-2 transition-colors text-sm"
         >
           <span>←</span> Back to Dashboard
         </button>
-        {#if !isActive}
+        <div class="flex items-center gap-3">
+          {#if !isActive}
+            <button
+              on:click={setAsActive}
+              class="px-6 py-3 bg-amber-900 hover:bg-amber-800 text-white font-semibold transition-colors text-sm"
+            >
+              Set as Active Character
+            </button>
+          {/if}
           <button
-            on:click={setAsActive}
-            class="px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold rounded-lg transition-all shadow-lg"
+            on:click={() => showDeleteModal = true}
+            class="px-6 py-3 bg-red-900 hover:bg-red-800 text-white font-semibold transition-colors text-sm"
           >
-            Set as Active Character
+            Delete Character
           </button>
-        {/if}
+        </div>
       </div>
 
       <!-- Hero Section -->
-      <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border-2 border-amber-700/40 rounded-2xl p-8 mb-8 backdrop-blur-sm">
+      <div class="bg-neutral-900 border border-neutral-800 p-8 mb-8">
         <div class="flex items-center gap-6 mb-6">
-          <div class="w-24 h-24 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center text-5xl shadow-lg">
+          <div class="w-24 h-24 bg-amber-900 border-2 border-amber-700 flex items-center justify-center text-5xl">
             🗡️
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-              <h1 class="text-4xl font-bold text-white">{character.playerName}</h1>
+              <h1 class="text-4xl font-bold text-white uppercase tracking-wide">{character.playerName}</h1>
               {#if isActive}
-                <span class="bg-amber-500 text-black text-sm px-3 py-1 rounded-full font-bold">ACTIVE</span>
+                <span class="bg-amber-700 border border-amber-600 text-black text-xs px-3 py-1 font-bold uppercase tracking-wide">Active</span>
               {/if}
             </div>
-            <div class="flex items-center gap-4 text-gray-400">
-              <span class="text-lg">Level <span class="text-amber-400 font-bold">{character.currentLevel}</span></span>
+            <div class="flex items-center gap-4 text-neutral-500 text-sm">
+              <span>Level <span class="text-amber-500 font-bold">{character.currentLevel}</span></span>
               <span>•</span>
               <span>{character.currentRunes.toLocaleString()} Runes</span>
               <span>•</span>
@@ -283,38 +288,38 @@
 
         <!-- Progress Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-black/30 rounded-lg p-4 border border-gray-700">
+          <div class="bg-neutral-950 border border-neutral-800 p-4">
             <div class="flex justify-between items-center mb-2">
-              <span class="text-gray-300 text-sm">Bosses Defeated</span>
-              <span class="text-amber-400 font-bold">{defeatedBosses.length} / {allBosses.length}</span>
+              <span class="text-neutral-400 text-xs uppercase tracking-wide">Bosses Defeated</span>
+              <span class="text-amber-500 font-bold text-sm">{defeatedBosses.length} / {allBosses.length}</span>
             </div>
-            <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+            <div class="h-2 bg-neutral-800 overflow-hidden">
               <div 
-                class="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
+                class="h-full bg-red-600 transition-all duration-500"
                 style="width: {getProgressPercentage(defeatedBosses.length, allBosses.length)}%"
               ></div>
             </div>
           </div>
 
-          <div class="bg-black/30 rounded-lg p-4 border border-gray-700">
+          <div class="bg-neutral-950 border border-neutral-800 p-4">
             <div class="flex justify-between items-center mb-2">
-              <span class="text-gray-300 text-sm">Weapons Collected</span>
-              <span class="text-amber-400 font-bold">{collectedWeapons.length} / {allWeapons.length}</span>
+              <span class="text-neutral-400 text-xs uppercase tracking-wide">Weapons Collected</span>
+              <span class="text-amber-500 font-bold text-sm">{collectedWeapons.length} / {allWeapons.length}</span>
             </div>
-            <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+            <div class="h-2 bg-neutral-800 overflow-hidden">
               <div 
-                class="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
+                class="h-full bg-blue-600 transition-all duration-500"
                 style="width: {getProgressPercentage(collectedWeapons.length, allWeapons.length)}%"
               ></div>
             </div>
           </div>
 
-          <div class="bg-black/30 rounded-lg p-4 border border-gray-700">
+          <div class="bg-neutral-950 border border-neutral-800 p-4">
             <div class="flex justify-between items-center mb-2">
-              <span class="text-gray-300 text-sm">Total Deaths</span>
-              <span class="text-purple-400 font-bold">{character.totalDeaths}</span>
+              <span class="text-neutral-400 text-xs uppercase tracking-wide">Total Deaths</span>
+              <span class="text-purple-400 font-bold text-sm">{character.totalDeaths}</span>
             </div>
-            <div class="flex items-center gap-2 text-gray-400 text-sm">
+            <div class="flex items-center gap-2 text-neutral-600 text-xs">
               <span>💀</span>
               <span>Every death makes you stronger</span>
             </div>
@@ -325,16 +330,16 @@
       <!-- Collections Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Defeated Bosses -->
-        <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border-2 border-red-700/40 rounded-2xl p-6 backdrop-blur-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <div class="bg-neutral-900 border border-neutral-800 p-6 flex flex-col">
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-neutral-800">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 uppercase tracking-wide">
               <span>⚔️</span>
               <span>Defeated Bosses</span>
-              <span class="text-red-400 text-lg">({defeatedBosses.length})</span>
+              <span class="text-red-400 text-base">({defeatedBosses.length})</span>
             </h2>
             <a
               href="/boss-fight"
-              class="px-4 py-2 bg-red-600/80 hover:bg-red-600 text-white text-sm font-bold rounded-lg transition-colors"
+              class="px-4 py-2 bg-red-900 hover:bg-red-800 text-white text-xs font-semibold transition-colors"
             >
               Browse Bosses
             </a>
@@ -347,42 +352,42 @@
                 type="text"
                 bind:value={bossSearchTerm}
                 placeholder="🔍 Search defeated bosses..."
-                class="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-red-400 focus:outline-none text-sm"
+                class="w-full bg-black text-white px-4 py-2 border border-neutral-700 focus:border-red-700 focus:outline-none text-sm"
               />
             </div>
           {/if}
           
           {#if defeatedBosses.length === 0}
             <div class="text-center py-12 flex-1 flex flex-col items-center justify-center">
-              <p class="text-gray-500 text-4xl mb-2">👹</p>
-              <p class="text-gray-400">No bosses defeated yet</p>
-              <p class="text-gray-500 text-sm mt-1">Start your journey and conquer the Lands Between!</p>
+              <p class="text-neutral-700 text-4xl mb-2">👹</p>
+              <p class="text-neutral-500 text-sm">No bosses defeated yet</p>
+              <p class="text-neutral-700 text-xs mt-1">Start your journey and conquer the Lands Between!</p>
             </div>
           {:else if filteredDefeatedBosses.length === 0}
             <div class="text-center py-12 flex-1 flex flex-col items-center justify-center">
-              <p class="text-gray-500 text-4xl mb-2">🔍</p>
-              <p class="text-gray-400">No bosses found</p>
-              <p class="text-gray-500 text-sm mt-1">Try a different search term</p>
+              <p class="text-neutral-700 text-4xl mb-2">🔍</p>
+              <p class="text-neutral-500 text-sm">No bosses found</p>
+              <p class="text-neutral-700 text-xs mt-1">Try a different search term</p>
             </div>
           {:else}
-            <div class="space-y-3 max-h-[600px] overflow-y-auto pr-2 flex-1">
+            <div class="space-y-2 max-h-[600px] overflow-y-auto pr-2 flex-1 custom-scrollbar">
               {#each filteredDefeatedBosses as boss}
-                <div class="bg-gray-800/50 border border-gray-700 hover:border-red-500 rounded-lg p-4 transition-all group relative">
+                <div class="bg-neutral-950 border border-neutral-800 hover:border-red-800 p-4 transition-colors">
                   <div class="flex items-center gap-4">
                     {#if boss.image}
                       <img 
                         src={boss.image} 
                         alt={boss.name}
-                        class="w-16 h-16 rounded object-cover border-2 border-red-700 group-hover:border-red-500 transition-colors"
+                        class="w-16 h-16 object-cover border-2 border-red-800"
                       />
                     {:else}
-                      <div class="w-16 h-16 rounded bg-gray-700 flex items-center justify-center text-3xl border-2 border-red-700">
+                      <div class="w-16 h-16 bg-neutral-900 border-2 border-red-800 flex items-center justify-center text-3xl">
                         👹
                       </div>
                     {/if}
                     <div class="flex-1 min-w-0">
-                      <h3 class="text-white font-bold truncate">{boss.name}</h3>
-                      <p class="text-gray-400 text-sm">{boss.region}</p>
+                      <h3 class="text-white font-bold truncate text-sm">{boss.name}</h3>
+                      <p class="text-neutral-500 text-xs">{boss.region}</p>
                     </div>
                     <div class="flex items-center gap-2">
                       <button
@@ -394,7 +399,7 @@
                       </button>
                       <button
                         on:click={() => removeBoss(boss.id)}
-                        class="text-gray-400 hover:text-red-500 transition-colors text-lg"
+                        class="text-neutral-600 hover:text-red-500 transition-colors text-lg"
                         title="Remove from defeated"
                       >
                         ✕
@@ -408,16 +413,16 @@
         </div>
 
         <!-- Collected Weapons -->
-        <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border-2 border-blue-700/40 rounded-2xl p-6 backdrop-blur-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <div class="bg-neutral-900 border border-neutral-800 p-6 flex flex-col">
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-neutral-800">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2 uppercase tracking-wide">
               <span>🗡️</span>
               <span>Collected Weapons</span>
-              <span class="text-blue-400 text-lg">({collectedWeapons.length})</span>
+              <span class="text-blue-400 text-base">({collectedWeapons.length})</span>
             </h2>
             <a
               href="/weapons"
-              class="px-4 py-2 bg-blue-600/80 hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition-colors"
+              class="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold transition-colors"
             >
               Browse Weapons
             </a>
@@ -430,42 +435,42 @@
                 type="text"
                 bind:value={weaponSearchTerm}
                 placeholder="🔍 Search collected weapons..."
-                class="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-400 focus:outline-none text-sm"
+                class="w-full bg-black text-white px-4 py-2 border border-neutral-700 focus:border-blue-700 focus:outline-none text-sm"
               />
             </div>
           {/if}
           
           {#if collectedWeapons.length === 0}
             <div class="text-center py-12 flex-1 flex flex-col items-center justify-center">
-              <p class="text-gray-500 text-4xl mb-2">⚔️</p>
-              <p class="text-gray-400">No weapons collected yet</p>
-              <p class="text-gray-500 text-sm mt-1">Explore the world to find powerful armaments!</p>
+              <p class="text-neutral-700 text-4xl mb-2">⚔️</p>
+              <p class="text-neutral-500 text-sm">No weapons collected yet</p>
+              <p class="text-neutral-700 text-xs mt-1">Explore the world to find powerful armaments!</p>
             </div>
           {:else if filteredCollectedWeapons.length === 0}
             <div class="text-center py-12 flex-1 flex flex-col items-center justify-center">
-              <p class="text-gray-500 text-4xl mb-2">🔍</p>
-              <p class="text-gray-400">No weapons found</p>
-              <p class="text-gray-500 text-sm mt-1">Try a different search term</p>
+              <p class="text-neutral-700 text-4xl mb-2">🔍</p>
+              <p class="text-neutral-500 text-sm">No weapons found</p>
+              <p class="text-neutral-700 text-xs mt-1">Try a different search term</p>
             </div>
           {:else}
-            <div class="space-y-3 max-h-[600px] overflow-y-auto pr-2 flex-1">
+            <div class="space-y-2 max-h-[600px] overflow-y-auto pr-2 flex-1 custom-scrollbar">
               {#each filteredCollectedWeapons as weapon}
-                <div class="bg-gray-800/50 border border-gray-700 hover:border-blue-500 rounded-lg p-4 transition-all group relative">
+                <div class="bg-neutral-950 border border-neutral-800 hover:border-blue-800 p-4 transition-colors">
                   <div class="flex items-center gap-4">
                     {#if weapon.image}
                       <img 
                         src={weapon.image} 
                         alt={weapon.name}
-                        class="w-16 h-16 rounded object-contain bg-gray-900 border-2 border-blue-700 group-hover:border-blue-500 transition-colors p-1"
+                        class="w-16 h-16 object-contain bg-black border-2 border-blue-800 p-1"
                       />
                     {:else}
-                      <div class="w-16 h-16 rounded bg-gray-700 flex items-center justify-center text-3xl border-2 border-blue-700">
+                      <div class="w-16 h-16 bg-neutral-900 border-2 border-blue-800 flex items-center justify-center text-3xl">
                         ⚔️
                       </div>
                     {/if}
                     <div class="flex-1 min-w-0">
-                      <h3 class="text-white font-bold truncate">{weapon.name}</h3>
-                      <p class="text-gray-400 text-sm">{weapon.category}</p>
+                      <h3 class="text-white font-bold truncate text-sm">{weapon.name}</h3>
+                      <p class="text-neutral-500 text-xs">{weapon.category}</p>
                     </div>
                     <div class="flex items-center gap-2">
                       <button
@@ -477,7 +482,7 @@
                       </button>
                       <button
                         on:click={() => removeWeapon(weapon.id)}
-                        class="text-gray-400 hover:text-red-500 transition-colors text-lg"
+                        class="text-neutral-600 hover:text-red-500 transition-colors text-lg"
                         title="Remove from collection"
                       >
                         ✕
@@ -493,16 +498,16 @@
 
       <!-- Visited Areas -->
       {#if character.visitedAreas && character.visitedAreas.length > 0}
-        <div class="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border-2 border-amber-700/40 rounded-2xl p-6 backdrop-blur-sm mt-8">
-          <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+        <div class="bg-neutral-900 border border-neutral-800 p-6 mt-8">
+          <h2 class="text-xl font-bold text-white mb-4 pb-4 border-b border-neutral-800 uppercase tracking-wide flex items-center gap-2">
             <span>🗺️</span>
             <span>Visited Areas</span>
-            <span class="text-amber-400 text-lg">({character.visitedAreas.length})</span>
+            <span class="text-amber-500 text-base">({character.visitedAreas.length})</span>
           </h2>
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {#each character.visitedAreas as area}
-              <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-3 text-center">
-                <p class="text-gray-300 text-sm">{area}</p>
+              <div class="bg-neutral-950 border border-neutral-800 p-3 text-center">
+                <p class="text-neutral-400 text-sm">{area}</p>
               </div>
             {/each}
           </div>
@@ -512,8 +517,36 @@
   </div>
 {/if}
 
+<!-- Delete Confirmation Modal -->
+{#if showDeleteModal}
+  <div class="fixed inset-0 bg-black/95 flex items-center justify-center p-4 z-50">
+    <div class="bg-neutral-900 border-2 border-red-800 p-8 max-w-md w-full">
+      <h2 class="text-2xl font-bold text-white mb-4 uppercase tracking-wide">Delete Character?</h2>
+      <p class="text-neutral-400 mb-6">
+        Are you sure you want to delete <span class="text-white font-bold">{character?.playerName}</span>? 
+        This action cannot be undone. All progress will be permanently lost.
+      </p>
+      
+    </div>
+  </div>
+{/if}
+
 <style>
-  .hover\:scale-102:hover {
-    transform: scale(1.02);
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #171717;
+    border: 1px solid #262626;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #404040;
+    border: 1px solid #525252;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #525252;
   }
 </style>

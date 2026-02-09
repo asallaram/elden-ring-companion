@@ -89,24 +89,24 @@
   }
 </script>
 
-<div class="min-h-screen bg-black p-6 text-white">
+<div class="min-h-screen bg-[#0a0a0a] p-6 text-white">
   <div class="max-w-7xl mx-auto">
     <!-- Back Button -->
     <button 
       on:click={() => goto('/dashboard')} 
-      class="text-amber-400 hover:text-amber-300 mb-6 flex items-center gap-2 transition-colors"
+      class="text-amber-600 hover:text-amber-500 mb-6 flex items-center gap-2 transition-colors text-sm"
     >
       <span>←</span> Back to Dashboard
     </button>
 
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-5xl font-bold text-amber-400 mb-2">Bosses</h1>
-      <p class="text-gray-400">Select a boss to view details and track your attempts</p>
+      <h1 class="text-4xl font-bold text-white mb-2 uppercase tracking-wide">Bosses</h1>
+      <p class="text-neutral-500 text-sm">Select a boss to view details and track your attempts</p>
       {#if selectedCharacter}
-        <p class="text-gray-500 text-sm mt-2">
-          Playing as <span class="text-amber-400">{selectedCharacter.playerName}</span> • 
-          <span class="text-red-400">{defeatedBossIds.length}</span> bosses defeated
+        <p class="text-neutral-600 text-xs mt-2">
+          Playing as <span class="text-amber-500">{selectedCharacter.playerName}</span> • 
+          <span class="text-red-500">{defeatedBossIds.length}</span> bosses defeated
         </p>
       {/if}
     </div>
@@ -114,19 +114,19 @@
     {#if isLoading}
       <div class="flex items-center justify-center py-20">
         <div class="text-center">
-          <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-amber-400 mx-auto mb-4"></div>
-          <p class="text-amber-400 text-lg">Loading bosses...</p>
+          <div class="w-12 h-12 border-2 border-neutral-700 border-t-amber-600 mx-auto mb-4 animate-spin"></div>
+          <p class="text-neutral-400 text-sm">Loading bosses...</p>
         </div>
       </div>
     {:else if error}
-      <div class="bg-red-900/20 border border-red-500 rounded-lg p-6 text-center">
-        <p class="text-red-400 text-lg">{error}</p>
+      <div class="bg-red-950/30 border border-red-900 p-6 text-center">
+        <p class="text-red-400">{error}</p>
       </div>
     {:else}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {#each bosses as boss}
           <div 
-            class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-amber-500 relative"
+            class="bg-neutral-900 border border-neutral-800 overflow-hidden cursor-pointer hover:border-amber-800 transition-colors relative"
             on:click={() => viewBossDetails(boss.id)}
             on:keypress={(e) => e.key === 'Enter' && viewBossDetails(boss.id)}
             role="button"
@@ -134,14 +134,14 @@
           >
             <!-- Defeated Badge -->
             {#if isDefeated(boss.id)}
-              <div class="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold z-10 flex items-center gap-1 shadow-lg">
+              <div class="absolute top-2 left-2 bg-red-900 border border-red-700 text-red-300 px-2 py-1 text-xs font-bold z-10 flex items-center gap-1">
                 <span>✓</span>
                 <span>Defeated</span>
               </div>
             {/if}
 
             <!-- Boss Image -->
-            <div class="relative h-56 overflow-hidden bg-black">
+            <div class="relative h-56 overflow-hidden bg-black border-b border-neutral-800">
               {#if boss.image}
                 <img 
                   src={boss.image} 
@@ -149,16 +149,16 @@
                   class="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
                 />
               {:else}
-                <div class="w-full h-full flex items-center justify-center bg-gray-800">
-                  <span class="text-gray-500 text-4xl">👹</span>
+                <div class="w-full h-full flex items-center justify-center bg-neutral-950">
+                  <span class="text-neutral-700 text-4xl">👹</span>
                 </div>
               {/if}
               
               <!-- Health Bar Overlay -->
               <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3">
                 <div class="flex items-center gap-2">
-                  <div class="h-2 flex-1 bg-gray-700 rounded-full overflow-hidden">
-                    <div class="h-full bg-red-500 w-full"></div>
+                  <div class="h-1.5 flex-1 bg-neutral-800 overflow-hidden">
+                    <div class="h-full bg-red-600 w-full"></div>
                   </div>
                   <span class="text-xs text-red-400 font-bold whitespace-nowrap">
                     {formatHealthPoints(boss.healthPoints)} HP
@@ -170,18 +170,18 @@
             <!-- Boss Details -->
             <div class="p-5">
               <!-- Boss Name -->
-              <h2 class="text-xl font-bold text-amber-400 mb-3 line-clamp-1">
+              <h2 class="text-lg font-bold text-white mb-3 line-clamp-1 uppercase tracking-wide">
                 {boss.name}
               </h2>
 
               <!-- Location Info -->
               <div class="space-y-2 mb-4">
                 <div class="flex items-start gap-2">
-                  <span class="text-gray-500 text-sm">📍</span>
+                  <span class="text-neutral-600 text-sm">📍</span>
                   <div class="flex-1">
-                    <p class="text-gray-300 text-sm font-medium">{boss.region}</p>
+                    <p class="text-neutral-400 text-sm font-medium">{boss.region}</p>
                     {#if boss.location && boss.location !== boss.region}
-                      <p class="text-gray-500 text-xs">{boss.location}</p>
+                      <p class="text-neutral-600 text-xs">{boss.location}</p>
                     {/if}
                   </div>
                 </div>
@@ -189,8 +189,8 @@
                 <!-- Main Drop -->
                 {#if boss.drops && boss.drops.length > 0}
                   <div class="flex items-center gap-2">
-                    <span class="text-gray-500 text-sm">💎</span>
-                    <p class="text-gray-400 text-sm line-clamp-1">
+                    <span class="text-neutral-600 text-sm">💎</span>
+                    <p class="text-neutral-500 text-sm line-clamp-1">
                       {getMainDrop(boss.drops)}
                     </p>
                   </div>
@@ -199,7 +199,7 @@
 
               <!-- Action Button -->
               <button
-                class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                class="w-full bg-amber-900 hover:bg-amber-800 text-white font-semibold py-3 transition-colors flex items-center justify-center gap-2 text-sm"
                 on:click|stopPropagation={() => viewBossDetails(boss.id)}
               >
                 <span>📊</span>
@@ -212,7 +212,7 @@
 
       {#if bosses.length === 0}
         <div class="text-center py-20">
-          <p class="text-gray-400 text-lg">No bosses found</p>
+          <p class="text-neutral-500">No bosses found</p>
         </div>
       {/if}
     {/if}
